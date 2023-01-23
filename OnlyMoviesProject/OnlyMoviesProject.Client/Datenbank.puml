@@ -1,0 +1,39 @@
+@startuml
+
+entity Genre{
+    + id : int
+    + name : string
+}
+
+entity Movie{
+    + MovieId : int
+    + Title : string
+    + Length : Timespan
+    + ReleaseDatum : Datetime 
+    + Actors : string
+    + Fsk : int
+    + Genre : Genre
+    + Feedback : Feedback
+}
+Movie o--> Genre
+
+entity Feedback {
+    + FeedbackId : int
+    + User : User
+    + Movie : Movie
+    + Text : string
+}
+
+entity User{
+    + UserId: int
+    + Username : string
+    + Firstname : string
+    + Lastname : string
+    + Email : string
+    + Feedback : Feedback
+}
+
+User o--> Feedback
+Movie o--> Feedback
+
+@enduml

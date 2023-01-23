@@ -1,0 +1,28 @@
+@startuml
+
+entity Category{
+    + name : string
+}
+
+entity Author{
+    + Firstname : string 
+    + Lastname : string
+    + Email : string
+    + Phone : string[0..1]
+    + category : Category
+}
+
+Author o--> Category : "> category "
+
+entity Article{
+    + Headline : string
+    + Content : string
+    + Created : Datetime 
+    + ImageUrl : string
+    + Author : Author 
+
+}
+
+Article o--> Author
+
+@enduml
