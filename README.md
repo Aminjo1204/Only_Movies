@@ -69,3 +69,9 @@ muss mit *Fortsetzen* bestätigt werden.
 Das Programm erzeugt eine mariaDB Datenbank mit folgendem physischem Schema.
 
 ![](data_model_0937.png)
+
+## Use Case
+
+Hier das Use-Case Diagramm zu dem veröffentlichten eines Kommentares bzw. Blogs
+
+![Richtiges_Use-Case](https://user-images.githubusercontent.com/118912100/214299980-877f72da-27c7-454b-8160-8626e05275fc.png)
