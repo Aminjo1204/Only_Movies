@@ -64,6 +64,17 @@ if (app.Environment.IsDevelopment())
     }
     app.UseCors();
 }
+
+
+// Creating the database.
+using (var scope = app.Services.CreateScope())
+{
+    using (var db = scope.ServiceProvider.GetRequiredService<OnlyMoviesContext>())
+    {
+        db.CreateDatabase(isDevelopment: app.Environment.IsDevelopment());
+    }
+}
+
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();

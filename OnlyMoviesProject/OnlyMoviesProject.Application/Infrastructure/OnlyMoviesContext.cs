@@ -3,8 +3,10 @@ using Bogus.DataSets;
 using Microsoft.EntityFrameworkCore;
 using OnlyMoviesProject.Application.Model;
 using System;
+using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace OnlyMoviesProject.Webapi.Infrastructure
 {
@@ -111,7 +113,7 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
                     releaseDate: releaseDate,
                     rated: f.Random.ListItem(ratings).OrNull(f, 0.5f),
                     imageUrl: f.Random.ListItem(images).OrNull(f, 0.2f),
-                    created: releaseDate.AddSeconds(f.Random.Int(7*86400, 2*365*86400)))
+                    created: releaseDate.AddSeconds(f.Random.Int(7 * 86400, 2 * 365 * 86400)))
                 { Guid = f.Random.Guid() };
                 movie.Actors.AddRange(movieActors);
                 movie.Genres.AddRange(movieGenres);
@@ -137,5 +139,41 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             Feedbacks.AddRange(feedbacks);
             SaveChanges();
         }
+
+
+
+
+        /// <summary>
+        /// Initialize the database with some values (holidays, ...).
+        /// Unlike Seed, this method is also called in production.
+        /// </summary>
+        private void Initialize()
+        {
+            // Create a user with the specified attributes
+            var user = new User("John", "Doe", "johndoe@example.com", "johndoe", "]u", Userrole.Admin);
+
+            var user2 = new User("Xingao", "Leea", "Leea@example.com", "Xingaoleea", "]u", Userrole.User);
+
+            // Save the user to the database
+            Users.Add(user);
+            SaveChanges();
+        }
+        /// <summary>
+        /// Generates random values for testing the application. This method is only called in development mode.
+        /// </summary>
+
+        /// <summary>
+        /// Creates the database. Called once at application startup.
+        /// </summary>
+        public void CreateDatabase(bool isDevelopment)
+        {
+            if (isDevelopment) { Database.EnsureDeleted(); }
+            // EnsureCreated only creates the model if the database does not exist or it has no
+            // tables. Returns true if the schema was created.  Returns false if there are
+            // existing tables in the database. This avoids initializing multiple times.
+            if (Database.EnsureCreated()) { Initialize(); }
+            if (isDevelopment) Seed();
+        }
+
     }
 }
