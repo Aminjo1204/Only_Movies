@@ -158,13 +158,8 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             Users.Add(user);
             SaveChanges();
         }
-        /// <summary>
-        /// Generates random values for testing the application. This method is only called in development mode.
-        /// </summary>
+       
 
-        /// <summary>
-        /// Creates the database. Called once at application startup.
-        /// </summary>
         public void CreateDatabase(bool isDevelopment)
         {
             if (isDevelopment) { Database.EnsureDeleted(); }

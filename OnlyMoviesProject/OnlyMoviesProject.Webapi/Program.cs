@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using OnlyMoviesProject.Webapi.Infrastructure;
 using System;
+using Webapi;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -32,6 +34,48 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+var app = builder.Build();
+// Other code
+if (app.Environment.IsDevelopment())
+{
+    // We will create a fresh sql server container in development mode. For performance reasons,
+    // you can disable deleteAfterShutdown because in development mode the database is deleted
+    // before it is generated.
+    try
+    {
+        await app.UseSqlServerContainer(
+            containerName: "spengernews_sqlserver", version: "latest",
+            connectionString: app.Configuration.GetConnectionString("Default"),
+            deleteAfterShutdown: true);
+    }
+    catch (Exception e)
+    {
+        app.Logger.LogError(e.Message);
+        return;
+    }
+}
+
+// Other code
+if (app.Environment.IsDevelopment())
+{
+    // We will create a fresh sql server container in development mode. For performance reasons,
+    // you can disable deleteAfterShutdown because in development mode the database is deleted
+    // before it is generated.
+    try
+    {
+        await app.UseSqlServerContainer(
+            containerName: "OnlyMovies_sqlserver", version: "latest",
+            connectionString: app.Configuration.GetConnectionString("Default"),
+            deleteAfterShutdown: true);
+    }
+    catch (Exception e)
+    {
+        app.Logger.LogError(e.Message);
+        return;
+    }
+}
+
+
 // JWT Authentication ******************************************************************************
 // using Microsoft.AspNetCore.Authentication.JwtBearer;
 // using Microsoft.IdentityModel.Tokens;
@@ -51,7 +95,6 @@ builder.Services
     });
 // *****
 
-var app = builder.Build();
 app.UseHttpsRedirection();
 if (app.Environment.IsDevelopment())
 {
