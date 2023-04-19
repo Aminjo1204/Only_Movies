@@ -11,13 +11,31 @@ using System;
 using Webapi;
 
 var builder = WebApplication.CreateBuilder(args);
+// JWT Authentication ******************************************************************************
+// using Microsoft.AspNetCore.Authentication.JwtBearer;
+// using Microsoft.IdentityModel.Tokens;
+
+byte[] secret = Convert.FromBase64String(builder.Configuration["Secret"]);
+builder.Services
+    .AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(secret),
+            ValidateAudience = false,
+            ValidateIssuer = false
+        };
+    });
+// *****
+
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(OnlyMoviesProject.Application.Dto.MappingProfile));
 builder.Services.AddDbContext<OnlyMoviesContext>(opt =>
 {
-    opt.UseMySql(
-        builder.Configuration.GetConnectionString("MySql"),
-        new MariaDbServerVersion("10.10.2"),
+    opt.UseSqlServer(
+        builder.Configuration.GetConnectionString("Default"),
         o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
 });
 
@@ -75,25 +93,6 @@ if (app.Environment.IsDevelopment())
     }
 }
 
-
-// JWT Authentication ******************************************************************************
-// using Microsoft.AspNetCore.Authentication.JwtBearer;
-// using Microsoft.IdentityModel.Tokens;
-
-byte[] secret = Convert.FromBase64String(builder.Configuration["Secret"]);
-builder.Services
-    .AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(secret),
-            ValidateAudience = false,
-            ValidateIssuer = false
-        };
-    });
-// *****
 
 app.UseHttpsRedirection();
 if (app.Environment.IsDevelopment())
