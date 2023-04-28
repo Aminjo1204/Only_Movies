@@ -151,11 +151,13 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             var user = new User(username: "admin", firstname: "The", lastname: "Admin",
                     email: "admin@spengergasse.at", password: "1111", role: Userrole.Admin);
 
-            var user2 = new User(username: "teacher", firstname: "The", lastname: "Teacher",
+            var user1 = new User(username: "teacher", firstname: "The", lastname: "Teacher",
                     email: "teacher@spengergasse.at", password: "1111", role: Userrole.User);
 
             // Save the user to the database
             Users.Add(user);
+            Users.Add(user1);
+
             SaveChanges();
         }
 
