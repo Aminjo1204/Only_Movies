@@ -140,25 +140,29 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             SaveChanges();
         }
 
-
-
-
         /// <summary>
         /// Initialize the database with some values (holidays, ...).
         /// Unlike Seed, this method is also called in production.
         /// </summary>
+
         private void Initialize()
         {
             // Create a user with the specified attributes
-            var user = new User("John", "Doe", "johndoe@example.com", "johndoe", "]u", Userrole.Admin);
+            var user = new User(username: "admin", firstname: "The", lastname: "Admin",
+                    email: "admin@spengergasse.at", password: "1111", role: Userrole.Admin);
 
-            var user2 = new User("Xingao", "Leea", "Leea@example.com", "Xingaoleea", "]u", Userrole.User);
+            var user2 = new User(username: "teacher", firstname: "The", lastname: "Teacher",
+                    email: "teacher@spengergasse.at", password: "1111", role: Userrole.User);
 
             // Save the user to the database
             Users.Add(user);
             SaveChanges();
         }
-       
+
+
+
+        
+
 
         public void CreateDatabase(bool isDevelopment)
         {
