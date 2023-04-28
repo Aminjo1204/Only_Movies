@@ -55,8 +55,8 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             var users = new User[]
             {
                 new User(
-                    username: "teacher", firstname: "The", lastname: "Teacher",
-                    email: "teacher@spengergasse.at", password: "1111", role: Userrole.User)
+                    username: "user", firstname: "The", lastname: "user",
+                    email: "user@spengergasse.at", password: "1111", role: Userrole.User)
                 { Guid = faker.Random.Guid() },
                 new User(
                     username: "admin", firstname: "The", lastname: "Admin",
@@ -151,8 +151,8 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             var user = new User(username: "admin", firstname: "The", lastname: "Admin",
                     email: "admin@spengergasse.at", password: "1111", role: Userrole.Admin);
 
-            var user1 = new User(username: "teacher", firstname: "The", lastname: "Teacher",
-                    email: "teacher@spengergasse.at", password: "1111", role: Userrole.User);
+            var user1 = new User(username: "user", firstname: "The", lastname: "user",
+                    email: "user@spengergasse.at", password: "1111", role: Userrole.User);
 
             // Save the user to the database
             Users.Add(user);

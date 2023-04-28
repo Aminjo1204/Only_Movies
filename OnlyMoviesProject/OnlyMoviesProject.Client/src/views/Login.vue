@@ -7,7 +7,7 @@ import axios from 'axios';
         <div v-if="!authenticated">
             <p class="mb-3">
                 Melde dich mit einen Zugangsdaten an, um Filme einfügen und kommentieren zu können. Tipp: Ein Adminuser ist <em>admin</em> mit dem Passwort <em>1111</em>. Ein normaler User ist
-                <em>teacher</em> mit dem Passwort <em>1111</em>. Der Admin kann Kommentare löschen, normale User dürfen nur Kommentare posten.
+                <em>user</em> mit dem Passwort <em>1111</em>. Der Admin kann Kommentare löschen, normale User dürfen nur Kommentare posten.
             </p>
             <div class="formRow">
                 <label>Username:</label>
@@ -58,7 +58,7 @@ export default {
         return {
             message: '',
             model: {
-                username: 'teacher',
+                username: 'user',
                 password: '1111',
             },
         };
