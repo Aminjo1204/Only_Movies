@@ -11,6 +11,8 @@ import axios from 'axios';
             </p>
             <div class="formRow">
                 <label>Username:</label>
+
+                
                 <input class="form-control" v-model="model.username" type="text" />
             </div>
             <div class="formRow">
