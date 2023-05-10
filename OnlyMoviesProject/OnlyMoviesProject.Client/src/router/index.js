@@ -5,6 +5,7 @@ import HomeView from '../views/HomeView.vue'
 import AddMovie from '../views/AddMovie.vue'
 import CommentMovie from '../views/CommentMovie.vue'
 import AboutUs from '../views/AboutUs.vue'
+import Favourite from '../views/Favourite.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,7 +35,13 @@ const router = createRouter({
       path: '/aboutus',
       name: 'aboutus',
       component: AboutUs
-    }    
+    },
+    {
+      path: '/favouriteview',
+      name: 'favouriteview',
+     component: Favourite
+
+    }   
   ]
 });
 

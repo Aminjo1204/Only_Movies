@@ -12,6 +12,9 @@ import axios from 'axios';
             <router-link to="/commentmovie">
                 <li>Comment movies</li>
             </router-link>
+            <router-link to="/favouriteview">
+                <li>Favourite</li>
+            </router-link>
             <router-link to="/aboutus">
                 <li>Über uns</li>
             </router-link>
