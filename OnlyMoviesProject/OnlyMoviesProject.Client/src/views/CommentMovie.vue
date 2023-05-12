@@ -2,9 +2,10 @@
 import axios from 'axios'; // npm install axios
 </script>
 
+
 <template>
-    <div class="commentMovieView">
-        <h3>Comment movies</h3>
+    <div class="favouriteview">
+        <h3>Comment Movies</h3>
         <p class="mb-3">Use the search bar to find movies in the database.</p>
         <div class="formRow">
             <label>Title:</label>
@@ -23,6 +24,19 @@ import axios from 'axios'; // npm install axios
                         <div class="movietitle">{{ m.title }} {{ m.year }}</div>
                         <div class="genres">{{ m.genres }}</div>
                         <div class="actors">{{ m.actors }}</div>
+                    </div>
+                    <div class="comments">
+                        <div class="comment" v-for="f in m.feedbacks" v-bind:key="f.guid">
+                            <div class="commentInfo">
+                                <span v-if="isAdmin" class="deleteLink" v-on:click="deleteFeedback(f)">&#10006;</span>
+                                {{ f.username }} @ {{ new Date(f.created).toLocaleString() }} wrote:
+                            </div>
+                            <div class="commentText">{{ f.text }}</div>
+                        </div>
+                    </div>
+                    <div class="newComment">
+                        <input type="text" class="form-control" v-on:keyup="addCommentOnEnter(m, $event)" v-model="m.newComment" placeholder="Post your comment." />
+                        <button class="btn btn-outline-primary btn-sm" v-on:click="addComment(m)">Save</button>
                     </div>
                 </div>
             </div>

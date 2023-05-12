@@ -53,25 +53,6 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
-// Other code
-if (app.Environment.IsDevelopment())
-{
-    // We will create a fresh sql server container in development mode. For performance reasons,
-    // you can disable deleteAfterShutdown because in development mode the database is deleted
-    // before it is generated.
-    try
-    {
-        await app.UseSqlServerContainer(
-            containerName: "spengernews_sqlserver", version: "latest",
-            connectionString: app.Configuration.GetConnectionString("Default"),
-            deleteAfterShutdown: true);
-    }
-    catch (Exception e)
-    {
-        app.Logger.LogError(e.Message);
-        return;
-    }
-}
 
 // Other code
 if (app.Environment.IsDevelopment())
@@ -95,19 +76,6 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-if (app.Environment.IsDevelopment())
-{
-    using (var scope = app.Services.CreateScope())
-    using (var db = scope.ServiceProvider.GetRequiredService<OnlyMoviesContext>())
-    {
-        db.Database.EnsureDeleted();
-        db.Database.EnsureCreated();
-        db.Seed();
-    }
-    app.UseCors();
-}
-
-
 // Creating the database.
 using (var scope = app.Services.CreateScope())
 {

@@ -24,23 +24,11 @@ import axios from 'axios'; // npm install axios
                         <div class="genres">{{ m.genres }}</div>
                         <div class="actors">{{ m.actors }}</div>
                     </div>
-                    <div class="comments">
-                        <div class="comment" v-for="f in m.feedbacks" v-bind:key="f.guid">
-                            <div class="commentInfo">
-                                <span v-if="isAdmin" class="deleteLink" v-on:click="deleteFeedback(f)">&#10006;</span>
-                                {{ f.username }} @ {{ new Date(f.created).toLocaleString() }} wrote:
-                            </div>
-                            <div class="commentText">{{ f.text }}</div>
-                        </div>
                     </div>
-                    <div class="newComment">
-                        <input type="text" class="form-control" v-on:keyup="addCommentOnEnter(m, $event)" v-model="m.newComment" placeholder="Post your comment." />
-                        <button class="btn btn-outline-primary btn-sm" v-on:click="addComment(m)">Save</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <style scoped>
@@ -85,20 +73,6 @@ import axios from 'axios'; // npm install axios
 }
 .movietitle {
     font-weight: bolder;
-}
-
-.comment {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2em;
-}
-.newComment {
-    display: flex;
-    gap: 0.5em;
-}
-.newComment input {
-    flex-grow: 1;
-    border: 1px solid hsl(180, 53%, 40%);
 }
 
 .deleteLink {

@@ -51,35 +51,7 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
         {
             Randomizer.Seed = new Random(1039);
             var faker = new Faker("de");
-
-            var users = new User[]
-            {
-                new User(
-                    username: "user", firstname: "The", lastname: "user",
-                    email: "user@spengergasse.at", password: "1111", role: Userrole.User)
-                { Guid = faker.Random.Guid() },
-                new User(
-                    username: "admin", firstname: "The", lastname: "Admin",
-                    email: "admin@spengergasse.at", password: "1111", role: Userrole.Admin)
-                { Guid = faker.Random.Guid() },
-            }
-            .Concat(new Faker<User>("de").CustomInstantiator(f =>
-            {
-                var lastname = f.Name.LastName();
-                return new User(
-                    username: lastname.ToLower(),
-                    firstname: f.Name.FirstName(),
-                    lastname: lastname,
-                    email: $"{lastname.ToLower()}@spengergasse.at",
-                    password: "1111",
-                    role: f.PickRandom<Userrole>())
-                { Guid = f.Random.Guid() };
-            })
-            .Generate(10))
-            .GroupBy(e => e.Email).Select(g => g.First())
-            .ToList();
-            Users.AddRange(users);
-            SaveChanges();
+            var users = Users.OrderBy(u => u.Email).ToList();
 
             var genres = new Genre[]
             {
