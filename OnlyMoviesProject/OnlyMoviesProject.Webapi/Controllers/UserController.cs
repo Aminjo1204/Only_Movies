@@ -9,22 +9,31 @@ using System;
 using OnlyMoviesProject.Webapi.Infrastructure;
 using System.Linq;
 using OnlyMoviesProject.Application.Model;
+using Microsoft.EntityFrameworkCore;
+using OnlyMoviesProject.Application.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace OnlyMoviesProject.Webapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
+
+
     public class UserController : ControllerBase
     {
         public record CredentialsDto(string username, string password);
 
         private readonly OnlyMoviesContext _db;
         private readonly IConfiguration _config;
-        public UserController(OnlyMoviesContext db, IConfiguration config)
+        private readonly ILogger<UserController> _logger;
+
+
+        public UserController(OnlyMoviesContext db, IConfiguration config, ILogger<UserController> logger)
         {
             _db = db;
             _config = config;
+            _logger = logger;
         }
 
 
@@ -99,6 +108,30 @@ namespace OnlyMoviesProject.Webapi.Controllers
                 .ToList();
             if (user is null) { return BadRequest(); }
             return Ok(user);
+        }
+
+        [HttpPost("register")]
+        public IActionResult CreateUser([FromBody] UserDto userDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var user = new User(userDto.Username, userDto.Firstname, userDto.Lastname, userDto.Email, userDto.Password, userDto.Role);
+
+                _db.Users.Add(user);
+                _db.SaveChanges();
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating user.");
+                return StatusCode(500, "Internal server error.");
+            }
         }
     }
 }
