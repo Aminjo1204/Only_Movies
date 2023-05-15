@@ -116,19 +116,19 @@ namespace OnlyMoviesProject.Webapi.Controllers
             return CreatedAtAction(nameof(AddMovieFeedback), new { feedback.Guid });
         }
 
-        //[HttpPost("favourite")]
-       
-        //public IActionResult AddFavourite(FavouriteDto favouriteDto)
-        //{
-        //    var movie = _db.Movies.FirstOrDefault(m => m.Guid == favouriteDto.movieGuid);
-        //    if (movie is null) { return BadRequest(); }
-        //    var user = _db.Users.FirstOrDefault(u => u.Guid == favouriteDto.userGuid);
-        //    if (user is null) { return BadRequest(); }
+        [HttpPost("favourite")]
 
-        //    try { _db.SaveChanges(); }
-        //    catch (DbUpdateException e) { return BadRequest(e.InnerException?.Message ?? e.Message); }
-        //    return CreatedAtAction(nameof(AddMovie), new { favourite.Guid });
-        //}
+        public IActionResult AddFavourite(FavouriteDto favouriteDto)
+        {
+            var movie = _db.Movies.FirstOrDefault(m => m.Guid == favouriteDto.movieGuid);
+            if (movie is null) { return BadRequest(); }
+            var user = _db.Users.FirstOrDefault(u => u.Guid == favouriteDto.userGuid);
+            if (user is null) { return BadRequest(); }
+
+            try { _db.SaveChanges(); }
+            catch (DbUpdateException e) { return BadRequest(e.InnerException?.Message ?? e.Message); }
+            return CreatedAtAction(nameof(AddMovie), new { user.Guid });
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("feedback/{guid:Guid}")]
@@ -141,6 +141,7 @@ namespace OnlyMoviesProject.Webapi.Controllers
             catch (DbUpdateException e) { return BadRequest(e.InnerException?.Message ?? e.Message); }
             return NoContent();
         }
+
         private IEnumerable<object> GetMovieResult(IQueryable<Movie> movies)
         {
             return movies.Select(m => new
@@ -164,7 +165,8 @@ namespace OnlyMoviesProject.Webapi.Controllers
                         f.Guid,
                         Created = f.Created.ToString("O"),
                         f.User.Username,
-                        f.Text
+                        f.Text,
+                       
                     })
             })
             .ToList();
