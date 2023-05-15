@@ -26,8 +26,8 @@ import Spinner from '../components/Spinner.vue';
                     </div>
                     <div class="movieinfo">
                         <div class="movietitle">{{ m.Title }} {{ m.Year }}</div>
-                        <div class="addbutton"><button class="btn btn-outline-primary btn-sm" v-on:click="addMovie(m.imdbID)">Add</button></div>
-                        <div class="addFav "><button class="btn btn-outline-primary btn-sm" v-on:click="addFavourite(m.imdbID)">Favourite</button></div>
+                        <div v-if="authenticated" class="addbutton"><button class="btn btn-outline-primary btn-sm" v-on:click="addMovie(m.imdbID)">Add</button></div>
+                        <div v-if="authenticated" class="addbutton"><button class="btn btn-outline-primary btn-sm" v-on:click="addMovie(m.imdbID)">Favourite</button></div>
                     </div>
                     
                 </div>
