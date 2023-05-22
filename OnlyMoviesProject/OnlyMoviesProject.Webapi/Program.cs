@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using OnlyMoviesProject.Webapi.Infrastructure;
+using OnlyMoviesProject.Webapi.Services;
 using System;
 using Webapi;
 
@@ -38,7 +39,11 @@ builder.Services.AddDbContext<OnlyMoviesContext>(opt =>
         builder.Configuration.GetConnectionString("Default"),
         o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
 });
-
+builder.Services.AddScoped(opt => new AzureAdClient(
+    tenantId: builder.Configuration["AzureAd:TenantId"],
+    clientId: builder.Configuration["AzureAd:ClientId"],
+    clientSecret: builder.Configuration["AzureAd:ClientSecret"],
+    scope: builder.Configuration["AzureAd:Scope"]));
 
 if (builder.Environment.IsDevelopment())
 {
@@ -73,7 +78,6 @@ if (app.Environment.IsDevelopment())
         return;
     }
 }
-
 
 app.UseHttpsRedirection();
 // Creating the database.

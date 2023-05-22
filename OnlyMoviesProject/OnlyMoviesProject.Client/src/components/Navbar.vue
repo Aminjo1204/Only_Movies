@@ -1,5 +1,6 @@
 <script setup>
 import axios from 'axios';
+import process from 'node:process'
 </script>
 
 <template>
@@ -24,6 +25,7 @@ import axios from 'axios';
                 </li>
             </router-link>
             <a href="" v-on:click="logout()"><li v-if="authenticated">Logout {{ userdata.username }}</li></a>
+            <li><a v-bind:href="registerMailUrl">Register Mailaccount</a></li>
         </ul>
     </nav>
 </template>
@@ -65,6 +67,9 @@ export default {
         userdata() {
             return this.$store.state.userdata;
         },
+        registerMailUrl() {
+            return process.env.NODE_ENV == 'production' ? "/account/signinMailaccount" : "https://localhost:5001/account/signinMailaccount";            
+        }
     },
     methods: {
         logout() {

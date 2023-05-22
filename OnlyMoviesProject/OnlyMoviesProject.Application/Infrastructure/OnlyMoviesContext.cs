@@ -1,24 +1,29 @@
 ﻿using Bogus;
-using Bogus.DataSets;
 using Microsoft.EntityFrameworkCore;
 using OnlyMoviesProject.Application.Model;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OnlyMoviesProject.Webapi.Infrastructure
 {
     public class OnlyMoviesContext : DbContext
     {
-        public OnlyMoviesContext(DbContextOptions opt) : base(opt) { }
+        public OnlyMoviesContext(DbContextOptions opt) : base(opt)
+        {
+        }
 
+        public DbSet<Config> Configs => Set<Config>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Actor> Actors => Set<Actor>();
         public DbSet<Movie> Movies => Set<Movie>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
         public DbSet<Genre> Genres => Set<Genre>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<string>();
@@ -133,11 +138,6 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             SaveChanges();
         }
 
-
-
-        
-
-
         public void CreateDatabase(bool isDevelopment)
         {
             if (isDevelopment) { Database.EnsureDeleted(); }
@@ -148,5 +148,56 @@ namespace OnlyMoviesProject.Webapi.Infrastructure
             if (isDevelopment) Seed();
         }
 
+        public async Task<Config> GetConfig() => (await Configs.OrderBy(c => c.Id).FirstOrDefaultAsync()) ?? new Config();
+
+        public async Task SetConfig(Config config)
+        {
+            if (config.Id == default) Configs.Add(config);
+            await SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Set the account to send alert emails and encrypt the refresh token with the key provided.
+        /// </summary>
+        public async Task SetMailerAccount(string mailAccountname, string refreshToken, byte[] key)
+        {
+            using var aes = Aes.Create();
+            aes.Key = key;
+
+            var value = Encoding.UTF8.GetBytes(refreshToken);
+            using var memoryStream = new MemoryStream();
+            memoryStream.Write(aes.IV);
+            using var encryptor = aes.CreateEncryptor();
+            using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                cryptoStream.Write(value);
+            var encryptedToken = Convert.ToBase64String(memoryStream.ToArray());
+
+            var config = await GetConfig();
+            config.MailerRefreshToken = encryptedToken;
+            config.MailerAccountname = mailAccountname;
+            await SetConfig(config);
+        }
+
+        /// <summary>
+        /// Read the account to send alert emails and decrypt the refresh token with the key provided.
+        /// </summary>
+        public async Task<(string? accountname, string? refreshToken)> GetMailerAccount(byte[] key)
+        {
+            var config = await GetConfig();
+            if (string.IsNullOrEmpty(config.MailerAccountname) || string.IsNullOrEmpty(config.MailerRefreshToken))
+                return (null, null);
+
+            using var aes = Aes.Create();
+            var memoryStream = new MemoryStream(Convert.FromBase64String(config.MailerRefreshToken));
+            var iv = new byte[aes.BlockSize / 8];
+            memoryStream.Read(iv);
+
+            using var decryptor = aes.CreateDecryptor(key, iv);
+            using var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+            using var dataStream = new MemoryStream();
+            cryptoStream.CopyTo(dataStream);
+            var decryptedToken = Encoding.UTF8.GetString(dataStream.ToArray());
+            return (config.MailerAccountname, decryptedToken);
+        }
     }
 }
