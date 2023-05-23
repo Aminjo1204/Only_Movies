@@ -25,7 +25,7 @@ import process from 'node:process'
                 </li>
             </router-link>
             <a href="" v-on:click="logout()"><li v-if="authenticated">Logout {{ userdata.username }}</li></a>
-            <li><a v-bind:href="registerMailUrl">Register Mailaccount</a></li>
+            <li><a v-bind:href="registerMailUrl">Register Newsletter</a></li>
         </ul>
     </nav>
 </template>
