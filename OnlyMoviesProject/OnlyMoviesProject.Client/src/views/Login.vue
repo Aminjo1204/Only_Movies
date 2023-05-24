@@ -4,33 +4,7 @@ import axios from "axios";
 
 <template>
   <div>
-  <div class="loginView">
-    <div v-if="!authenticated">
-      <p class="mb-3">
-        Melde dich mit einen Zugangsdaten an, um Filme einfügen und kommentieren
-        zu können. Tipp: Ein Adminuser ist <em>admin</em> mit dem Passwort
-        <em>1111</em>. Ein normaler User ist <em>user</em> mit dem Passwort
-        <em>1111</em>. Der Admin kann Kommentare löschen, normale User dürfen
-        nur Kommentare posten.
-      </p>
-      <div class="formRow">
-        <label>Username:</label>
-
-        <input class="form-control"  type="text" />
-      </div>
-      <div class="formRow">
-        <label>Password:</label>
-        <input class="form-control"  type="password" />
-      </div>
-      <div>
-        <button class="btn btn-outline-primary" >
-          Submit
-        </button>
-      </div>
-    </div>
-    <div v-if="authenticated">User {{ userdata.username }} logged in.</div>
-  </div>
-
+  
   <div class="container" id="container">
     <div class="form-container sign-up-container">
       <form action="#">
