@@ -10,6 +10,10 @@ import axios from 'axios'; // npm install axios
         <div class="formRow">
             <label>Title:</label>
             <input class="form-control" type="text" v-on:keyup="searchOnEnter($event)" v-model="title" />
+            <select @change="genreChange($event)">
+                <option value=""></option>
+                <option v-for="g in genres" v-bind:key="g.guid" v-bind:value="g.guid">{{ g.name }}</option>
+            </select>
             <button class="btn btn-outline-primary" v-on:click="searchForMovies()">Search</button>
         </div>
         <h5 v-if="showRecent">Recently added</h5>
@@ -114,12 +118,15 @@ export default {
         return {
             title: '',
             movies: [],
+            genres: [],
             newComments: {},
             showRecent: true,
         };
     },
     async mounted() {
         await this.searchForMovies();
+        const response = await axios.get('genre')
+        this.genres = response.data
     },
     methods: {
         async searchForMovies() {
@@ -166,6 +173,15 @@ export default {
             }
             this.searchForMovies();
         },
+        async genreChange(event)
+        {
+            if(event.target.value === "")
+            {
+                return;
+            }
+            const response = await axios.get(`movie/searchbygenre/${event.target.value}?count=3`)
+            this.movies = response.data;
+        }
     },
     computed: {
         authenticated() {
