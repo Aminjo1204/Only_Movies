@@ -6,6 +6,4 @@
         <a href="" target="_blank">OMDb API</a> durchsuchen, um Filme hinzuzufügen. Diese Filme können dann von anderen Usern kommentiert werden.
     </p>
     <p>Administratoren können Kommentare löschen, falls etwas Unpassendes gepostet wurde.</p>
-
-    
 </template>
