@@ -13,6 +13,7 @@ namespace OnlyMoviesProject.Application.Model
         }
 
         public int Id { get; private set; }
+        public Guid Guid { get; private set; }
         public string Name { get; set; }
         public List<Movie> Movies { get; } = new();
     }

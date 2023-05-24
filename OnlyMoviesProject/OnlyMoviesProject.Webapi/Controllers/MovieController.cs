@@ -8,11 +8,12 @@ using OnlyMoviesProject.Webapi.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlyMoviesProject.Webapi.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class MovieController : ControllerBase
     {
@@ -170,6 +171,18 @@ namespace OnlyMoviesProject.Webapi.Controllers
                     })
             })
             .ToList();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("searchbygenre/{guid:Guid}")]
+        public async Task<IActionResult> SearchMovieByGenre(Guid guid, [FromQuery] int? count)
+        {
+            var genre = await _db.Genres.FirstAsync(a => a.Guid == guid);
+            var itemsCount = Math.Min(10, count ?? 10);
+            var moviesResult = GetMovieResult(_db.Movies.Where(a => a.Genres.Contains(genre))
+                .OrderByDescending(m => m.Created)
+                .Take(itemsCount));
+            return Ok(moviesResult);
         }
     }
 }
